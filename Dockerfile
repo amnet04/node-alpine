@@ -6,7 +6,7 @@ RUN apk update upgrade --no-cache && \
     apk add --no-cache libstdc++ git && \
     # ln -s /usr/bin/python3 /usr/bin/python && \
     git clone https://github.com/nodejs/node.git && \
-    cd node && git checkout v12.x && \
+    cd node && git checkout v8.x && \
     ./configure --prefix=/opt && \
     make -j8 && \
     make install && \
