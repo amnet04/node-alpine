@@ -9,7 +9,7 @@ RUN apk update upgrade --no-cache && \
     ./configure --prefix=/opt/node && \
     make -j8 && \
     make install && \
-    apk del .build-deps && \
+    apk del --purge .build-deps && \
     rm -Rf /node 
     
 FROM alpine:3.14
@@ -19,6 +19,9 @@ COPY --from=0 /opt /opt
 RUN apk add --no-cache libstdc++ && \
     ln -s /opt/node/bin/node /usr/local/bin/ && \
     ln -s /opt/node/bin/npm /usr/local/bin/ && \
-    ln -s /opt/node/bin/npx /usr/local/bin/
+    ln -s /opt/node/bin/npx /usr/local/bin/ && \
+    rm -rf /opt/lib/node_modules/docs && \
+    apk --purge del apk-tools
+
  
 CMD ["/opt/node/bin/node"] 
