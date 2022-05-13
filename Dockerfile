@@ -4,13 +4,21 @@ RUN apk update upgrade --no-cache && \
     apk add --no-cache  --virtual .build-deps binutils-gold gcc g++ libgcc make \
         python2 linux-headers && \
     apk add --no-cache libstdc++ git && \
-    # ln -s /usr/bin/python3 /usr/bin/python && \
     git clone https://github.com/nodejs/node.git && \
     cd node && git checkout v8.x && \
-    ./configure --prefix=/opt && \
+    ./configure --prefix=/opt/node && \
     make -j8 && \
     make install && \
-    ln -s /opt/bin/node /bin/node && \
-    ln -s /opt/bin/npm /bin/npm && \
     apk del .build-deps && \
-    rm -Rf /node  
+    rm -Rf /node 
+    
+FROM alpine:3.14
+
+COPY --from=0 /opt /opt
+
+RUN apk add --no-cache libstdc++ && \
+    ln -s /opt/node/bin/node /usr/local/bin/ && \
+    ln -s /opt/node/bin/npm /usr/local/bin/ && \
+    ln -s /opt/node/bin/npx /usr/local/bin/
+ 
+CMD ["/opt/node/bin/node"] 
